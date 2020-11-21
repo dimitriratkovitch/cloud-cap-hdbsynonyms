@@ -1,0 +1,92 @@
+{
+  "name": "capmt",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/audit-logging": "^3.2.0",
+    "@sap/cds": "^4",
+    "@sap/hana-client": "^2.6.58",
+    "@sap/xsenv": "^3.1.0",
+    "@sap/xssec": "^2.2.5",
+    "express": "^4",
+    "passport": "^0.4.1"
+  },
+  "devDependencies": {
+    "sqlite3": "^5"
+  },
+  "scripts": {
+    "start": "npx cds run",
+    "deploy:cf": "cf deploy mta_archives/capmt_0.0.1.mtar --retries 0",
+    "build": "npx cds build/all --clean"
+  },
+  "cds": {
+    "build": {
+      "target": "gen",
+      "tasks": [
+        {
+          "src": "db_comm",
+          "for": "hana",
+          "options": {
+            "model": [
+              "db_comm"
+            ]
+          }
+        },
+        {
+          "src": "db",
+          "for": "hana",
+          "options": {
+            "model": [
+              "db",
+              "srv"
+            ]
+          }
+        },
+        {
+          "src": "srv",
+          "for": "node-cf",
+          "options": {
+            "model": [
+              "db",
+              "srv"
+            ]
+          }
+        }
+      ]
+    },
+    "[development]": {
+      "comment": "Anything defined inside of [development] will overrided prior values.",
+      "hana": {
+        "deploy-format": "hdbtable"
+      },
+      "requires": {
+        "db": {
+          "kind": "hana"
+        },
+        "uaa": {
+          "kind": "xsuaa"
+        },
+        "auth": {
+          "strategy": "JWT"
+        }
+      }
+    },
+    "[production]": {
+      "comment": "Anything defined inside of [production] will overrided prior values.",
+      "hana": {
+        "deploy-format": "hdbtable"
+      },
+      "requires": {
+        "db": {
+          "kind": "hana"
+        },
+        "uaa": {
+          "kind": "xsuaa"
+        }
+      }
+    }
+  }
+}

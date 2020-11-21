@@ -1,0 +1,130 @@
+## Generated mta.yaml based on template version 0.4.0
+## appName = capmt
+## language=nodejs; multiTenant=false
+## approuter=capmt-app
+_schema-version: "3.1"
+ID: capmt
+version: 0.0.1
+description: Cloud Application Programming(CAP) with Multitenancy using Service Manger Tenant Data Separation
+parameters:
+  enable-parallel-deployments: true
+
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm install
+        - npx -p @sap/cds-dk cds build
+        # - rm -rf gen/srv/sdc/db_comm/
+        # - cp -avp gen/srv/sdc gen/srv/hdbspecific
+        # - cp -avp srv/hdbspecific/cfg gen/srv/hdbspecific/db
+        # - cp -avp srv/hdbspecific/src gen/srv/hdbspecific/db
+
+modules:
+  # --------------------- Approuter ------------------------
+  - name: capmt-approuter
+    type: approuter.nodejs
+    path: approuter
+    parameters:
+      disk-quota: 512M
+      memory: 512M
+    build-parameters:
+      ignore: ["node_modules/"]
+    requires:
+      - name: capmt-uaa
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: "~{srv-url}"
+          forwardAuthToken: true
+
+  # --------------------- SERVER MODULE ------------------------
+  - name: capmt-srv
+    # ------------------------------------------------------------
+    type: nodejs
+    path: gen/srv
+    requires:
+      # Resources extracted from CAP configuration
+      - name: capmt-hdi-sub
+      - name: capmt-uaa
+    #    properties:
+    #      EXIT: 1 # required by deploy.js task to terminate
+    build-parameters:
+      ignore: ["node_modules/"]
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        public: true
+        properties:
+          srv-url: ${default-url}
+
+  # -------------------- CORE DB MODULE ------------------------
+  - name: capmt-hdb-comm
+    # ------------------------------------------------------------
+    type: hdb
+    path: gen/db_comm
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      # Don't package the dependencies if you're running into EINTEGRITY issues
+      ignore: [".DS_Store", "node_modules/"]
+      # Suppress the calling of npm install by listing no commands
+      builder: custom
+      commands: []
+    requires:
+      # 'hana' and 'xsuaa' resources extracted from CAP configuration
+      - name: capmt-hdi-comm
+
+  # -------------------- SUBSCRIBER DB MODULE ------------------------
+  - name: capmt-hdb-sub
+    # ------------------------------------------------------------
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      # Don't package the dependencies if you're running into EINTEGRITY issues
+      ignore: [".DS_Store", "node_modules/"]
+      # Suppress the calling of npm install by listing no commands
+      builder: custom
+      commands: []
+    requires:
+      # 'hana' and 'xsuaa' resources extracted from CAP configuration
+      - name: capmt-hdi-sub
+        properties:
+          TARGET_CONTAINER: "~{subscription-container-name}"
+      - name: capmt-hdi-comm
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: hdi-common-service
+          service: "~{common-container-name}"
+
+resources:
+  # services extracted from CAP configuration
+  # 'service-plan' can be configured via 'cds.requires.<name>.vcap.plan'
+  # ------------------------------------------------------------
+  - name: capmt-hdi-comm
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hanatrial # or 'hanatrial' on trial landscapes
+      service-plan: hdi-shared
+      service-name: CAPMT_HDI_COMMON
+    properties:
+      common-container-name: ${service-name}
+
+  - name: capmt-hdi-sub
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hanatrial # or 'hanatrial' on trial landscapes
+      service-plan: hdi-shared
+      service-name: CAPMT_HDI_SUB
+      config:
+    #        schema: SUBSCRIPTION
+    properties:
+      subscription-container-name: ${service-name}
+  - name: capmt-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa # or 'hanatrial' on trial landscapes
+      service-plan: application
+      path: ./xs-security.json
