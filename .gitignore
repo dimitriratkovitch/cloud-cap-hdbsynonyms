@@ -1,8 +1,9 @@
-# CAP bookshop-backend
+# CAP backend
 _out
 *.db
 connection.properties
 default-*.json
+.env
 gen/
 node_modules/
 target/
@@ -25,5 +26,5 @@ mta_archives/
 *.flattened-pom.xml
 
 # IDEs
-# .vscode
-# .idea
+ .vscode
+ .idea
