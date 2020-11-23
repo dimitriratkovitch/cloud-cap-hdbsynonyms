@@ -47,6 +47,8 @@ modules:
     requires:
       # Resources extracted from CAP configuration
       - name: capmt-hdi-sub
+        properties:
+          TARGET_CONTAINER: "~{subscription-container-name}"
       - name: capmt-smc
       - name: capmt-uaa
       - name: capmt-hdi-comm
