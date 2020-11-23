@@ -7,7 +7,7 @@ ID: capmt
 version: 0.0.1
 description: Cloud Application Programming(CAP) with Multitenancy using Service Manger Tenant Data Separation
 parameters:
-  enable-parallel-deployments: true
+  enable-parallel-deployments: false
 
 build-parameters:
   before-all:
