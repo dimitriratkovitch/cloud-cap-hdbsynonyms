@@ -16,6 +16,8 @@ const appEnvOpts = vcapLocal ? { vcap: vcapLocal } : {};
 
 const appEnv = cfenv.getAppEnv(appEnvOpts);
 
+console.log(appEnv);
+
 // console.log(appEnv);
 // console.log(appEnv.app.cf_api);
 // console.log(appEnv.app.organization_id);
@@ -28,10 +30,14 @@ const services = xsenv.getServices({
   uaa: { tag: "xsuaa" },
   //  registry: { tag: "SaaS" },
   sm: { label: "service-manager" },
-  hana: { label: "hanatrial" },
+  // hana: { label: "hanatrial" },
 });
 
-const serv_reps = process.env.SERVICE_REPLACEMENTS;
+var serv_reps_manual =
+  '[{"key":"hdi-common-service", "name": "capmt-hdi-comm", "service":"CAPMT_HDI_ZCOMMON"}]';
+const serv_reps = serv_reps_manual;
+// const serv_reps = process.env.SERVICE_REPLACEMENTS;
+
 const pwd = process.cwd();
 
 const { deploy } = require("@sap/hdi-deploy/library");
@@ -361,6 +367,7 @@ module.exports = (service) => {
         req.data.subscribedSubdomain +
         "."
     );
+
     const res = await next(); // IMPORTANT: call default implementation which is doing the HDI container creation
     let c = cds.env.for("app"); // use cds config framework to read app specific config node
     //let appuri = typeof c.urlpart === "undefined" ? ' ' : c.urlpart;
@@ -400,12 +407,13 @@ module.exports = (service) => {
         var hdienv = JSON.parse(JSON.stringify(process.env));
         //console.log("hdienv:" + JSON.stringify(hdienv));
         hdienv.TARGET_CONTAINER = "RUNTIME_HDI";
-        //hdienv.SERVICE_REPLACEMENTS = JSON.parse(serv_reps);
+        //        hdienv.SERVICE_REPLACEMENTS = JSON.parse(serv_reps);
+        hdienv.SERVICE_REPLACEMENTS = serv_reps;
         var hdiarray = new Array();
         var helem = { binding_name: null };
         helem.credentials = res0.items[0].credentials;
         helem.instance_name = hdienv.TARGET_CONTAINER;
-        helem.label = "hana";
+        helem.label = "hanatrial";
         helem.name = hdienv.TARGET_CONTAINER;
         helem.plan = "hdi-shared";
         helem.provider = null;
@@ -413,14 +421,16 @@ module.exports = (service) => {
         helem.tags = ["hana", "database", "relational"];
         helem.volume_mounts = [];
         hdiarray.push(helem);
+
         hdiarray.push(appEnv.services.hanatrial[0]);
+        hdiarray.push(appEnv.services.hanatrial[1]);
         //deployerEnv.VCAP_SERVICES = JSON.stringify({ hana: [instanceCredentials] });
-        hdienv.VCAP_SERVICES = JSON.stringify({ hana: hdiarray });
+        hdienv.VCAP_SERVICES = JSON.stringify({ hanatrial: hdiarray });
         //deployerEnv.HDI_DEPLOY_OPTIONS = JSON.stringify({ "auto_undeploy": autoUndeploy });
         hdienv.HDI_DEPLOY_OPTIONS = JSON.stringify({ auto_undeploy: false });
 
         //console.log("hdienv:" + inspect(hdienv, false, 5));
-        console.log("hdienv:" + JSON.stringify(hdienv));
+        //console.log("hdienv:" + JSON.stringify(hdienv));
 
         const logger = new Logger("DEPLOY_HELPER");
         logger.logCollector = null;

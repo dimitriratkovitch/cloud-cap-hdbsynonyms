@@ -42,21 +42,21 @@ entity States {
 }
 
 // Access via Synonym
-// @cds.persistence.exists
-// entity Currencies_Synonym {
-//   key code : String(3);
-//   name     : String(128);
-//   UperUSD  : Double;
-//   USDperU  : Double;
-// }
+@cds.persistence.exists
+entity Currencies_Synonym {
+  key code : String(3);
+  name     : String(128);
+  UperUSD  : Double;
+  USDperU  : Double;
+}
 
-// // Access via Synonym
-// @cds.persistence.exists
-// entity States_Synonym {
-//   key code : String(2);
-//   abbrev   : String(6);
-//   name     : String(24);
-// }
+// Access via Synonym
+@cds.persistence.exists
+entity States_Synonym {
+  key code : String(2);
+  abbrev   : String(6);
+  name     : String(24);
+}
 
 // entity OrdersWithState as projection on Orders {
 //   Orders.ID as ID, 

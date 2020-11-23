@@ -116,7 +116,7 @@ resources:
     parameters:
       service: hanatrial # or 'hanatrial' on trial landscapes
       service-plan: hdi-shared
-      service-name: CAPMT_HDI_COMMON
+      service-name: CAPMT_HDI_ZCOMMON
     properties:
       common-container-name: ${service-name}
 

@@ -1,5 +1,5 @@
 {
-  "app": {
+  "application": {
     "cf_api": "https://api.cf.eu10.hana.ondemand.com",
     "limits": {
       "fds": 16384,
