@@ -49,6 +49,11 @@ modules:
       - name: capmt-hdi-sub
       - name: capmt-smc
       - name: capmt-uaa
+      - name: capmt-hdi-comm
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: hdi-common-service
+          service: "~{common-container-name}"
     #    properties:
     #      EXIT: 1 # required by deploy.js task to terminate
     build-parameters:

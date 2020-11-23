@@ -1,0 +1,22 @@
+{
+  "COMMON_STATES_FOR_VIEW": {
+    "target": {
+      "object": "COMMON_STATES"
+    }
+  },
+  "MY_BOOKSHOP_STATES_SYNONYM": {
+    "target": {
+      "object": "COMMON_STATES"
+    }
+  },
+  "COMMON_CURRENCIES_FOR_VIEW": {
+    "target": {
+      "object": "COMMON_CURRENCIES"
+    }
+  },
+  "MY_BOOKSHOP_CURRENCIES_SYNONYM": {
+    "target": {
+      "object": "COMMON_CURRENCIES"
+    }
+  }
+}

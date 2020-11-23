@@ -2,5 +2,24 @@
   "files.exclude": {
     "**/.git": false
   },
-  "files.watcherExclude": {}
+  "files.watcherExclude": {},
+  "sqltools.connections": [
+    {
+      "connectionTimeout": 30,
+      "hanaOptions": {
+        "encrypt": true,
+        "sslValidateCertificate": true,
+        "sslCryptoProvider": "openssl"
+      },
+      "previewLimit": 50,
+      "driver": "SAPHana",
+      "name": "hana",
+      "server": "b6f28571-2c0f-495f-ac8d-bd659f252efe.hana.trial-eu10.hanacloud.ondemand.com",
+      "port": 443,
+      "username": "BB951FF32AD34E52A9D93B9A157ABFFA_CCUY76GYYN3OFH7Q6HNK6DZJC_RT",
+      "password": "Rz5gsJHIUrerb6_hu_.jFJ_t.U80vWJkQmNdxIKbawggZMmQgAeF4AmBYD4qNzPaABJvN0TJ4tVkOC31Bjcf9.IseMzz6Zq.NafUB3DzhPb_6.48jYE_Q7a7d5i.YXkg",
+      "database": "BB951FF32AD34E52A9D93B9A157ABFFA"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
 }
