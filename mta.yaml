@@ -24,7 +24,7 @@ modules:
   # --------------------- Approuter ------------------------
   - name: capmt-approuter
     type: approuter.nodejs
-    path: approuter
+    path: app
     parameters:
       disk-quota: 512M
       memory: 512M
@@ -47,7 +47,15 @@ modules:
     requires:
       # Resources extracted from CAP configuration
       - name: capmt-hdi-sub
+        properties:
+          TARGET_CONTAINER: "~{subscription-container-name}"
+      - name: capmt-smc
       - name: capmt-uaa
+      - name: capmt-hdi-comm
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: hdi-common-service
+          service: "~{common-container-name}"
     #    properties:
     #      EXIT: 1 # required by deploy.js task to terminate
     build-parameters:
@@ -108,7 +116,7 @@ resources:
     parameters:
       service: hanatrial # or 'hanatrial' on trial landscapes
       service-plan: hdi-shared
-      service-name: CAPMT_HDI_COMMON
+      service-name: CAPMT_HDI_ZCOMMON
     properties:
       common-container-name: ${service-name}
 
@@ -125,6 +133,17 @@ resources:
   - name: capmt-uaa
     type: org.cloudfoundry.managed-service
     parameters:
-      service: xsuaa # or 'hanatrial' on trial landscapes
+      service: xsuaa
       service-plan: application
       path: ./xs-security.json
+  - name: capmt-smc
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: capmt-uaa
+    parameters:
+      service: service-manager
+      service-plan: container
+      service-name: CAPMT_SMC
+      polling_timeout_seconds: 240
+      config:
+        acquireTimeoutMillis: max
