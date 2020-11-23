@@ -9,9 +9,14 @@
       "name": "cds run",
       "request": "launch",
       "type": "node-terminal",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "command": "cds watch",
+      "name": "cds watch",
+      "request": "launch",
+      "type": "node-terminal",
+      "skipFiles": ["<node_internals>/**"]
     },
     {
       "name": "Run bookshop-backend-1",
@@ -19,20 +24,11 @@
       "type": "node",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "npx",
-      "runtimeArgs": [
-        "-n"
-      ],
-      "args": [
-        "--",
-        "cds",
-        "run",
-        "--in-memory?"
-      ],
+      "runtimeArgs": ["-n"],
+      "args": ["--", "cds", "run", "--in-memory?"],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "envFile": "${workspaceFolder}/.env1",
       "env": {
         "run.config": "{\"handlerId\":\"cap_run_config_handler_id\",\"runnableId\":\"{\\\"projectPath\\\":\\\"/home/user/projects/bookshop-backend\\\",\\\"profileName\\\":\\\"CAPDefaultProfile\\\"}\"}"

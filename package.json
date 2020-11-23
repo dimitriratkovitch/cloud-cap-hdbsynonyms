@@ -6,10 +6,12 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@sap/audit-logging": "^3.2.0",
     "@sap/cds": "^4",
+    "@sap/cds-mtx": "^1",
     "@sap/hana-client": "^2.6.58",
-    "@sap/xsenv": "^3.1.0",
+    "@sap/hdi-deploy": "^3.11.4",
+    "@sap/instance-manager": "^2",
+    "@sap/xsenv": "^3.0.0",
     "@sap/xssec": "^2.2.5",
     "express": "^4",
     "passport": "^0.4.1"
@@ -23,6 +25,29 @@
     "build": "npx cds build/all --clean"
   },
   "cds": {
+    "comment": "Anything defined outside of a [profile] will apply to all profiles.",
+    "mtx": {
+      "app": {
+        "urlpart": "-dev-capmt-app.cfapps.eu.hana.ondemand.com"
+      },
+      "api": {
+        "model": true,
+        "provisioning": true,
+        "metadata": true
+      },
+      "element-prefix": [
+        "Z_",
+        "ZZ_"
+      ],
+      "namespace-blacklist": [
+        "com.sap.",
+        "sap."
+      ],
+      "entity-whitelist": [
+        "my.bookshop.Books"
+      ],
+      "service-whitelist": []
+    },
     "build": {
       "target": "gen",
       "tasks": [
@@ -57,14 +82,24 @@
         }
       ]
     },
+    "odata": {
+      "version": "v4"
+    },
+    "hana": {
+      "deploy-format": "hdbtable"
+    },
+    "features": {
+      "snapi": true
+    },
     "[development]": {
       "comment": "Anything defined inside of [development] will overrided prior values.",
-      "hana": {
-        "deploy-format": "hdbtable"
-      },
       "requires": {
         "db": {
-          "kind": "hana"
+          "kind": "hana",
+          "multiTenant": true,
+          "vcap": {
+            "label": "service-manager"
+          }
         },
         "uaa": {
           "kind": "xsuaa"
