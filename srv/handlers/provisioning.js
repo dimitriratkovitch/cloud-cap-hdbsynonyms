@@ -16,8 +16,7 @@ const appEnvOpts = vcapLocal ? { vcap: vcapLocal } : {};
 
 const appEnv = cfenv.getAppEnv(appEnvOpts);
 
-console.log(appEnv);
-
+//console.log(appEnv);
 // console.log(appEnv);
 // console.log(appEnv.app.cf_api);
 // console.log(appEnv.app.organization_id);
@@ -369,6 +368,7 @@ module.exports = (service) => {
     );
 
     const res = await next(); // IMPORTANT: call default implementation which is doing the HDI container creation
+
     let c = cds.env.for("app"); // use cds config framework to read app specific config node
     //let appuri = typeof c.urlpart === "undefined" ? ' ' : c.urlpart;
     let appuri = "-dev-mtxsm-app.cfapps.us10.hana.ondemand.com";
@@ -403,10 +403,13 @@ module.exports = (service) => {
     // Call deploy using content in hdbspecific
     connectSM(req.data.subscribedTenantId).then(
       function (res0) {
+        console.log("res0");
+        console.log(res0);
+
         //let deployerEnv = JSON.parse(JSON.stringify(process.env));
         var hdienv = JSON.parse(JSON.stringify(process.env));
         //console.log("hdienv:" + JSON.stringify(hdienv));
-        hdienv.TARGET_CONTAINER = "RUNTIME_HDI";
+        hdienv.TARGET_CONTAINER = res0.items[0].context.instance_name;
         //        hdienv.SERVICE_REPLACEMENTS = JSON.parse(serv_reps);
         hdienv.SERVICE_REPLACEMENTS = serv_reps;
         var hdiarray = new Array();
@@ -420,10 +423,12 @@ module.exports = (service) => {
         helem.syslog_drain_url = null;
         helem.tags = ["hana", "database", "relational"];
         helem.volume_mounts = [];
+
         hdiarray.push(helem);
 
-        hdiarray.push(appEnv.services.hanatrial[0]);
+        //  hdiarray.push(appEnv.services.hanatrial[0]);
         hdiarray.push(appEnv.services.hanatrial[1]);
+
         //deployerEnv.VCAP_SERVICES = JSON.stringify({ hana: [instanceCredentials] });
         hdienv.VCAP_SERVICES = JSON.stringify({ hanatrial: hdiarray });
         //deployerEnv.HDI_DEPLOY_OPTIONS = JSON.stringify({ "auto_undeploy": autoUndeploy });
@@ -431,6 +436,9 @@ module.exports = (service) => {
 
         //console.log("hdienv:" + inspect(hdienv, false, 5));
         //console.log("hdienv:" + JSON.stringify(hdienv));
+
+        console.log("XXX_HDI_ENVIRONMENT");
+        console.log(hdienv);
 
         const logger = new Logger("DEPLOY_HELPER");
         logger.logCollector = null;

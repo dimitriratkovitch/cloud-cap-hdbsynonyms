@@ -16,9 +16,9 @@
       "name": "hana",
       "server": "b6f28571-2c0f-495f-ac8d-bd659f252efe.hana.trial-eu10.hanacloud.ondemand.com",
       "port": 443,
-      "username": "777776A495A24927A7BD8F268AB4BEB9_CKTHEKWKPD5OI7426YST6DQME_RT",
-      "password": "Na59L9urx-meQjSjWUFn-czFfclMVb-MAKl48m7vWBim4zeUYvO1P5y4ptL2ijcO8qwfAwgKfF5N0cmkDoAXIJMhm0Tm.S7UuTFgEmBwtwDAcGrkovARonMt1XqIY3SU",
-      "database": "777776A495A24927A7BD8F268AB4BEB9"
+      "username": "D1ECFDB472674D9E96C7ED7C041CB307_487OP5VS50V7OGXNSZXQDEV15_RT",
+      "password": "Ku7okE5b6sXusD38UTS9JQXlkJzl87z5T1m0TPXY-xZl0aqMNG8fewDG2apThbQe9ebUsuP9fzMjUVcl7Icnekgm0QNqRDBBBlHHPPmozE5a47QxT3HI0lFzqnRDRfi-",
+      "database": "D1ECFDB472674D9E96C7ED7C041CB307"
     }
   ],
   "sqltools.useNodeRuntime": true
