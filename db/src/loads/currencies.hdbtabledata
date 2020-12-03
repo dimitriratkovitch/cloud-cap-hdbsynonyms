@@ -21,6 +21,6 @@
 			"file_name": "currencies.csv",
 			"has_header": true
 		},
-		"target_table": "COMMON_CURRENCIES"
+		"target_table": "CORE_CURRENCIES"
 	}]
 }

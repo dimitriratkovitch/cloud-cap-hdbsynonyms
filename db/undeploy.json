@@ -1,4 +1,3 @@
 [
-    "src/.hdiconfig",
-    "src/gen/.hdiconfig"
+    "src/.DS_Store"
 ]

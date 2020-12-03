@@ -1,5 +1,5 @@
 {
-  "xsappname": "capmt",
+  "xsappname": "core",
   "tenant-mode": "dedicated",
   "scopes": [
     {
