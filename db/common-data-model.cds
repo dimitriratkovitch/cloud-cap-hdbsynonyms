@@ -20,7 +20,7 @@
 [ERROR] db_comm/data-model.cds:4:8-14: Duplicate definition of artifact "common.States" (in entity:"common.States")
 */
 
-namespace common;
+namespace core;
 
 // Access directly via Synonym
 @cds.persistence.exists

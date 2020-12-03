@@ -1,10 +1,10 @@
 {
    "hdi-common-service": {
      "object_owner": {
-       "container_roles":["common_admin#"]
+       "container_roles":["core_admin#"]
      },
      "application_user": {
-       "container_roles":["common_admin"]
+       "container_roles":["core_admin"]
      }
    } 
 }

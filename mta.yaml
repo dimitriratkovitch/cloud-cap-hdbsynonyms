@@ -1,13 +1,13 @@
 ## Generated mta.yaml based on template version 0.4.0
-## appName = capmt
+## appName = capst
 ## language=nodejs; multiTenant=false
-## approuter=capmt-app
+## approuter=capst-app
 _schema-version: "3.1"
-ID: capmt
+ID: capst
 version: 0.0.1
 description: Cloud Application Programming(CAP) with Multitenancy using Service Manger Tenant Data Separation
 parameters:
-  enable-parallel-deployments: false
+  enable-parallel-deployments: true
 
 build-parameters:
   before-all:
@@ -22,7 +22,7 @@ build-parameters:
 
 modules:
   # --------------------- Approuter ------------------------
-  - name: capmt-approuter
+  - name: capst-approuter
     type: approuter.nodejs
     path: app
     parameters:
@@ -31,7 +31,7 @@ modules:
     build-parameters:
       ignore: ["node_modules/"]
     requires:
-      - name: capmt-uaa
+      - name: capst-uaa
       - name: srv-api
         group: destinations
         properties:
@@ -40,18 +40,17 @@ modules:
           forwardAuthToken: true
 
   # --------------------- SERVER MODULE ------------------------
-  - name: capmt-srv
+  - name: capst-srv
     # ------------------------------------------------------------
     type: nodejs
     path: gen/srv
     requires:
       # Resources extracted from CAP configuration
-      - name: capmt-hdi-sub
+      - name: capst-hdi-sub
         properties:
           TARGET_CONTAINER: "~{subscription-container-name}"
-      - name: capmt-smc
-      - name: capmt-uaa
-      - name: capmt-hdi-comm
+      - name: capst-uaa
+      - name: capst-hdi-comm
         group: SERVICE_REPLACEMENTS
         properties:
           key: hdi-common-service
@@ -66,25 +65,8 @@ modules:
         properties:
           srv-url: ${default-url}
 
-  # -------------------- CORE DB MODULE ------------------------
-  - name: capmt-hdb-comm
-    # ------------------------------------------------------------
-    type: hdb
-    path: gen/db_comm
-    parameters:
-      buildpack: nodejs_buildpack
-    build-parameters:
-      # Don't package the dependencies if you're running into EINTEGRITY issues
-      ignore: [".DS_Store", "node_modules/"]
-      # Suppress the calling of npm install by listing no commands
-      builder: custom
-      commands: []
-    requires:
-      # 'hana' and 'xsuaa' resources extracted from CAP configuration
-      - name: capmt-hdi-comm
-
   # -------------------- SUBSCRIBER DB MODULE ------------------------
-  - name: capmt-hdb-sub
+  - name: capst-hdb-sub
     # ------------------------------------------------------------
     type: hdb
     path: gen/db
@@ -97,11 +79,7 @@ modules:
       builder: custom
       commands: []
     requires:
-      # 'hana' and 'xsuaa' resources extracted from CAP configuration
-      - name: capmt-hdi-sub
-        properties:
-          TARGET_CONTAINER: "~{subscription-container-name}"
-      - name: capmt-hdi-comm
+      - name: capst-hdi-comm
         group: SERVICE_REPLACEMENTS
         properties:
           key: hdi-common-service
@@ -111,39 +89,28 @@ resources:
   # services extracted from CAP configuration
   # 'service-plan' can be configured via 'cds.requires.<name>.vcap.plan'
   # ------------------------------------------------------------
-  - name: capmt-hdi-comm
-    type: com.sap.xs.hdi-container
+  - name: capst-hdi-comm
+    type: org.cloudfoundry.existing-service
     parameters:
-      service: hanatrial # or 'hanatrial' on trial landscapes
+      service: hana # or 'hanatrial' on trial landscapes
       service-plan: hdi-shared
-      service-name: CAPMT_HDI_ZCOMMON
+      service-name: CORE_HDI
     properties:
       common-container-name: ${service-name}
 
-  - name: capmt-hdi-sub
+  - name: capst-hdi-sub
     type: com.sap.xs.hdi-container
     parameters:
-      service: hanatrial # or 'hanatrial' on trial landscapes
+      service: hana # or 'hanatrial' on trial landscapes
       service-plan: hdi-shared
-      service-name: CAPMT_HDI_SUB
+      service-name: capst_HDI_SUB
       config:
     #        schema: SUBSCRIPTION
     properties:
       subscription-container-name: ${service-name}
-  - name: capmt-uaa
+  - name: capst-uaa
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
       service-plan: application
       path: ./xs-security.json
-  - name: capmt-smc
-    type: org.cloudfoundry.managed-service
-    requires:
-      - name: capmt-uaa
-    parameters:
-      service: service-manager
-      service-plan: container
-      service-name: CAPMT_SMC
-      polling_timeout_seconds: 240
-      config:
-        acquireTimeoutMillis: max

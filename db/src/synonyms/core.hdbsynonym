@@ -1,0 +1,22 @@
+{
+  "CORE_STATES_FOR_VIEW": {
+    "target": {
+      "object": "CORE_STATES"
+    }
+  },
+  "MY_BOOKSHOP_STATES_SYNONYM": {
+    "target": {
+      "object": "CORE_STATES"
+    }
+  },
+  "CORE_CURRENCIES_FOR_VIEW": {
+    "target": {
+      "object": "CORE_CURRENCIES"
+    }
+  },
+  "MY_BOOKSHOP_CURRENCIES_SYNONYM": {
+    "target": {
+      "object": "CORE_CURRENCIES"
+    }
+  }
+}
