@@ -12,51 +12,19 @@
     "@sap/xsenv": "^3.1.0",
     "@sap/xssec": "^2.2.5",
     "express": "^4",
+    "hdb": "^0.18.2",
     "passport": "^0.4.1"
   },
   "devDependencies": {
+    "@sap/hdi-deploy": "3.11.15",
     "sqlite3": "^5"
   },
   "scripts": {
     "start": "npx cds run",
-    "deploy:cf": "cf deploy mta_archives/capmt_0.0.1.mtar --retries 0",
+    "build_deploy:cf": "mbt build && cf deploy mta_archives/core_0.0.1.mtar --retries 0",
     "build": "npx cds build/all --clean"
   },
   "cds": {
-    "build": {
-      "target": "gen",
-      "tasks": [
-        {
-          "src": "db_comm",
-          "for": "hana",
-          "options": {
-            "model": [
-              "db_comm"
-            ]
-          }
-        },
-        {
-          "src": "db",
-          "for": "hana",
-          "options": {
-            "model": [
-              "db",
-              "srv"
-            ]
-          }
-        },
-        {
-          "src": "srv",
-          "for": "node-cf",
-          "options": {
-            "model": [
-              "db",
-              "srv"
-            ]
-          }
-        }
-      ]
-    },
     "[development]": {
       "comment": "Anything defined inside of [development] will overrided prior values.",
       "hana": {
@@ -70,23 +38,18 @@
           "kind": "xsuaa"
         },
         "auth": {
-          "strategy": "JWT"
+          "strategy": "mock"
         }
       }
     },
-    "[production]": {
-      "comment": "Anything defined inside of [production] will overrided prior values.",
-      "hana": {
-        "deploy-format": "hdbtable"
-      },
-      "requires": {
-        "db": {
-          "kind": "hana"
-        },
-        "uaa": {
-          "kind": "xsuaa"
-        }
+    "[production]": {},
+    "requires": {
+      "db": {
+        "kind": "sql"
       }
+    },
+    "hana": {
+      "deploy-format": "hdbtable"
     }
   }
 }

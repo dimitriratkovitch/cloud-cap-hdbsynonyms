@@ -1,6 +1,6 @@
 {
 	"role":{
-		"name": "customer_admin",
+		"name": "external_access",
 		"schema_privileges": [{
 		   "privileges": ["SELECT METADATA",
 		    			  "SELECT CDS METADATA",
