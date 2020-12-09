@@ -87,7 +87,11 @@ resources:
     parameters:
       service: hana # or 'hanatrial' on trial landscapes
       service-plan: hdi-shared
+<<<<<<< HEAD
       service-name: core-hdi
+=======
+      service-name: CORE_HDI
+>>>>>>> 3546fd7362bb9e577fd23e0f86610cc3aad56a1f
     properties:
       core-container-name: ${service-name}
 
@@ -96,4 +100,8 @@ resources:
     parameters:
       service: xsuaa
       service-plan: application
+<<<<<<< HEAD
       path: ./xs-security.json
+=======
+      path: ./xs-security.json
+>>>>>>> 3546fd7362bb9e577fd23e0f86610cc3aad56a1f
